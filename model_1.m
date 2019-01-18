@@ -1,0 +1,58 @@
+clear
+close all
+clc
+
+load data;
+a=0:0.01:1;
+tao=1.2;
+t_safe=3;
+Vmax=60;
+
+Qsdc=3600/t_safe;
+k=0;
+for i=0:0.01:1
+    k=k+1;
+    a(k)=i;
+    lan(k)=log(a(k)+tao);
+    Qnosdc(k)=(Vmax*0.85)/(1/lan(k)+Vmax*tao/3600);
+    Q(k)=a(k)*Qsdc+(1-a(k))*Qnosdc(k);
+    D=24*Q(k)*All_num;
+    E=Aver_daily_n-D;
+    S(k)=sum(E.^2);
+end
+% plot(a,Q);
+% xlabel('alpha');ylabel('Q')
+figure;plot(a,S)
+xlabel('SDC车所占的比例\alpha');ylabel('通行量与通行能力的误差平方和f');
+title('f(\alpha)关系曲线')
+
+% S1=[0 S(1:end-1)];
+% SS=S-S1;
+% plot(a(2:end),SS(2:end));grid on;   %75.8%
+
+a=0.1;
+lan=log(a+tao);
+Qnosdc=(Vmax*0.85)/(1/lan+Vmax*tao/3600);
+Q=a*Qsdc+(1-a)*Qnosdc;
+D=24*Q*All_num;
+figure;plot(D,'r');hold on;plot(Aver_daily_n,'b');
+xlabel('n');ylabel('T&D');grid on;
+title('\alpha=10%');legend('D','T')
+
+a=0.5;
+lan=log(a+tao);
+Qnosdc=(Vmax*0.85)/(1/lan+Vmax*tao/3600);
+Q=a*Qsdc+(1-a)*Qnosdc;
+D=24*Q*All_num;
+figure;plot(D,'r');hold on;plot(Aver_daily_n,'b');
+xlabel('n');ylabel('T&D');grid on;
+title('\alpha=50%');legend('D','T')
+
+a=0.9;
+lan=log(a+tao);
+Qnosdc=(Vmax*0.85)/(1/lan+Vmax*tao/3600);
+Q=a*Qsdc+(1-a)*Qnosdc;
+D=24*Q*All_num;
+figure;plot(D,'r');hold on;plot(Aver_daily_n,'b');
+xlabel('n');ylabel('T&D');grid on;
+title('\alpha=90%');legend('D','T')
